@@ -1,4 +1,4 @@
-import { CLEAN_RESULT, directions, MAX_DEPTH_SIZE } from "./constants";
+import { CLEAN_RESULT, directions } from "./constants";
 import { ICoordinate, IResult, IState } from "./index.models";
 import {
    displayBoard,
@@ -10,6 +10,8 @@ import { Node } from "./node";
 
 let results: IResult = CLEAN_RESULT;
 
+const inputDepth = document.getElementById("game-depth") as HTMLInputElement;
+
 const DFS = function (
    final: IState,
    states: Array<{ state: IState; index: number }>,
@@ -19,7 +21,10 @@ const DFS = function (
    while (queue.length) {
       let currentState: Node | null = queue.pop() as Node;
 
-      if (currentState.getDepth() >= MAX_DEPTH_SIZE || results.haveSolution) {
+      if (
+         currentState.getDepth() >= parseInt(inputDepth.value) ||
+         results.haveSolution
+      ) {
          return states;
       }
 
@@ -149,6 +154,43 @@ const DFS = function (
       }
    };
 
+   const findResults = () => {
+      const getTableState = (table: HTMLTableElement): IState => {
+         const state: IState = [];
+         for (let row of table.rows) {
+            const stateRow = [];
+            for (let cell of row.cells) {
+               const cellData = parseInt(cell.innerHTML);
+
+               Number.isNaN(cellData)
+                  ? stateRow.push(null)
+                  : stateRow.push(cellData);
+            }
+            state.push(stateRow);
+         }
+
+         return state;
+      };
+
+      const initialStateTable = document.querySelector(".initial-state");
+      const finalStateTable = document.querySelector(".final-state");
+
+      const initial = getTableState(initialStateTable as HTMLTableElement);
+      const final = getTableState(finalStateTable as HTMLTableElement);
+
+      // reset step by step results output
+      indexOfNextState = 0;
+      results = CLEAN_RESULT;
+      (resultsWrapper as any).innerHTML = null;
+
+      const db: Map<string, boolean> = new Map();
+      db.set(initial.toString(), true);
+      const queue = [new Node(initial, null, null, 0, 0)];
+
+      allStates = DFS(final, [{ state: initial, index: 1 }], db, queue);
+      unlockButtons();
+   };
+
    disableButtons();
 
    nextStateButton?.addEventListener("click", () => {
@@ -206,40 +248,7 @@ const DFS = function (
       printResults();
    });
 
-   findButton?.addEventListener("click", () => {
-      const getTableState = (table: HTMLTableElement): IState => {
-         const state: IState = [];
-         for (let row of table.rows) {
-            const stateRow = [];
-            for (let cell of row.cells) {
-               const cellData = parseInt(cell.innerHTML);
+   findButton?.addEventListener("click", findResults);
 
-               Number.isNaN(cellData)
-                  ? stateRow.push(null)
-                  : stateRow.push(cellData);
-            }
-            state.push(stateRow);
-         }
-
-         return state;
-      };
-
-      const initialStateTable = document.querySelector(".initial-state");
-      const finalStateTable = document.querySelector(".final-state");
-
-      const initial = getTableState(initialStateTable as HTMLTableElement);
-      const final = getTableState(finalStateTable as HTMLTableElement);
-
-      // reset step by step results output
-      indexOfNextState = 0;
-      results = CLEAN_RESULT;
-      (resultsWrapper as any).innerHTML = null;
-
-      const db: Map<string, boolean> = new Map();
-      db.set(initial.toString(), true);
-      const queue = [new Node(initial, null, null, 0, 0)];
-
-      allStates = DFS(final, [{ state: initial, index: 1 }], db, queue);
-      unlockButtons();
-   });
+   inputDepth.addEventListener("change", findResults);
 })();
