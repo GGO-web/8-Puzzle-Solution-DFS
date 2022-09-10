@@ -1,9 +1,4 @@
-import {
-   CLEAN_RESULT,
-   directions,
-   initialState,
-   MAX_DEPTH_SIZE,
-} from "./constants";
+import { CLEAN_RESULT, directions, MAX_DEPTH_SIZE } from "./constants";
 import { ICoordinate, IResult, IState } from "./index.models";
 import {
    displayBoard,
@@ -24,7 +19,7 @@ const DFS = function (
    while (queue.length) {
       let currentState: Node | null = queue.pop() as Node;
 
-      if (currentState.getDepth() >= MAX_DEPTH_SIZE) {
+      if (currentState.getDepth() >= MAX_DEPTH_SIZE || results.haveSolution) {
          return states;
       }
 
@@ -135,7 +130,7 @@ const DFS = function (
          );
       } else {
          console.log("Порядок переміщень для розв'язку гри в 8:");
-         results?.currentState?.pathFromStart();
+         // results?.currentState?.pathFromStart();
          console.log(`Кількість відвіданих станів: ${results.moves}`);
          console.log(`Кількість станів занесених у БД: ${results.settled}`);
          console.log(`Кількість відкинутих станів: ${results.dropped}`);

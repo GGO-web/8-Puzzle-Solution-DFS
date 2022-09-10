@@ -45,7 +45,7 @@ export class Node {
 
          currentNode = currentNode?.parent as Node;
 
-         if (!currentNode.parent) {
+         if (currentNode && !currentNode.parent) {
             stateList.push(currentNode?.getState() as IState);
          }
       } while (currentNode?.getDepth() !== 0);
