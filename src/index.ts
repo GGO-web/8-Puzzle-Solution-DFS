@@ -135,7 +135,7 @@ const DFS = function (
          );
       } else {
          console.log("Порядок переміщень для розв'язку гри в 8:");
-         // results?.currentState?.pathFromStart();
+         results?.currentState?.pathFromStart();
          console.log(`Кількість відвіданих станів: ${results.moves}`);
          console.log(`Кількість станів занесених у БД: ${results.settled}`);
          console.log(`Кількість відкинутих станів: ${results.dropped}`);

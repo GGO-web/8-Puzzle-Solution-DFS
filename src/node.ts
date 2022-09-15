@@ -39,16 +39,14 @@ export class Node {
       let moveList: string[] = [];
       let currentNode: Node | null = this as Node;
 
+      console.log(currentNode.getDepth());
+
       do {
          stateList.push(currentNode?.getState() as IState);
          moveList.push(currentNode?.getMoves() as string);
 
          currentNode = currentNode?.parent as Node;
-
-         if (currentNode && !currentNode.parent) {
-            stateList.push(currentNode?.getState() as IState);
-         }
-      } while (currentNode?.getDepth() !== 0);
+      } while (currentNode?.getDepth());
 
       stateList.reverse();
       moveList.reverse();
