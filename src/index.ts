@@ -16,7 +16,8 @@ const DFS = function (
    final: IState,
    states: Array<{ state: IState; index: number }>,
    db: Map<string, boolean>,
-   queue: Node[]
+   queue: Node[],
+   orderedDirections: Array<ICoordinate>
 ) {
    while (queue.length) {
       let currentState: Node | null = queue.pop() as Node;
@@ -43,7 +44,7 @@ const DFS = function (
 
       const emptyCell = getEmpyCellCoords(currentState.getState());
 
-      directions.forEach((direction) => {
+      orderedDirections.forEach((direction) => {
          const copyState: IState | null = currentState
             ?.getState()
             ?.map((row) => [...row]) as IState;
@@ -82,7 +83,7 @@ const DFS = function (
                db.set(copyState.toString(), true);
                states.push({ state: copyState, index: results.moves + 1 });
 
-               DFS(final, states, db, queue);
+               DFS(final, states, db, queue, orderedDirections);
             } else {
                results.dropped++;
             }
@@ -187,7 +188,18 @@ const DFS = function (
       db.set(initial.toString(), true);
       const queue = [new Node(initial, null, null, 0, 0)];
 
-      allStates = DFS(final, [{ state: initial, index: 1 }], db, queue);
+      const directionLeft = parseInt(document.querySelector(".directions-left")?.textContent as string);
+      const directionTop = parseInt(document.querySelector(".directions-top")?.textContent as string);
+      const directionRight = parseInt(document.querySelector(".directions-right")?.textContent as string);
+      const directionBottom = parseInt(document.querySelector(".directions-bottom")?.textContent as string);
+      const directionHTML = [directionLeft, directionTop, directionRight, directionBottom];
+
+      const orderedDirections = directions.map((direction, index) => {
+         return {...direction, orderIndex: directionHTML[index]}
+      })
+      orderedDirections.sort((a,b) => a.orderIndex - b.orderIndex);
+
+      allStates = DFS(final, [{ state: initial, index: 1 }], db, queue, orderedDirections);
       unlockButtons();
    };
 

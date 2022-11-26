@@ -184,6 +184,36 @@
          </table>
       </div>
 
+      <table class="directions mb-3">
+         <tbody class="direction-body">
+            <tr class="directions-row text-center">
+               <td></td>
+               <td contenteditable="true" class="directions-top">
+                  2
+               </td>
+               <td></td>
+            </tr>
+            <tr class="directions-row">
+               <td contenteditable="true" class="directions-left">
+                  1
+               </td>
+               <td style="pointer-events: none;">
+                  <img src="images/directions.png" alt="Directions" />
+               </td>
+               <td contenteditable="true" class="directions-right">
+                  3
+               </td>
+            </tr>
+            <tr class="directions-row text-center">
+               <td></td>
+               <td contenteditable="true" class="directions-bottom">
+                  4
+               </td>
+               <td></td>
+            </tr>
+         </tbody>
+      </table>
+
       <div class="input-group">
          <label for="game-depth" class="form-label d-block w-100"
             >DFS depth value:
@@ -218,7 +248,13 @@
 
       <div
          id="results"
-         style="overflow: auto; max-height: 400px;"
+         style="
+            overflow: auto;
+            max-height: 400px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+         "
       ></div>
 
       <div
